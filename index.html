@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <link rel="stylesheet" href="https://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.css">
+    <link href="t1.css" rel="stylesheet" type="text/css">
+    <script src="https://code.jquery.com/jquery-1.11.1.min.js"></script>
+    <script src="https://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.js">
+    </script>
+	<script>
+    function searchNearbyRestaurants(restaurantType, radius) {
+        if ("geolocation" in navigator) {
+            navigator.geolocation.getCurrentPosition(function (position) {
+                var latitude = position.coords.latitude;
+                var longitude = position.coords.longitude;
+                var googleMapsURL = "https://www.google.com/maps/search/?api=1&query=" + encodeURIComponent(restaurantType) + "&ll=" + latitude + "," + longitude + "&radius=" + radius + "m";
+
+                window.open(googleMapsURL, "_blank");
+            });
+        } else {
+            alert("無法獲取訊息。");
+        }
+    }
+
+    function searchWithUserInput() {
+        var userInput = document.getElementById("userInput").value;
+        var radius = document.getElementById("radius").value;
+        searchNearbyRestaurants(userInput, radius);
+    }
+
+    $(document).on("pageinit", "#page2", function () {
+        $("#restaurantTypeList li a").on("click", function () {
+            var restaurantType = $(this).attr("id");
+            $("#radiusPopup").data("restaurantType", restaurantType).popup("open");
+        });
+
+        $("#searchButton").on("click", function () {
+            var restaurantType = $("#radiusPopup").data("restaurantType");
+            var radius = $("#radiusSelect").val();
+            searchNearbyRestaurants(restaurantType, radius);
+            $("#radiusPopup").popup("close");
+        });
+    });
+</script>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+</head>
+<body>
+    <div data-role="page" id="page1" class="cover-page">
+    <div data-role="header">
+        <h1>美食X檔案</h1>
+    </div>
+    <div data-role="content" class="cover-content">
+        <div class="center">
+            <h2>歡迎光臨美食X檔案</h2>
+            <a href="#page2" class="ui-btn ui-corner-all ui-shadow">開始</a>
+        </div>
+    </div>
+    <div data-role="footer" class="cover-footer">
+        <h4>&copy;版權所有:所有小組成員</h4>
+    </div>
+</div>
+
+
+
+    <div data-role="page" id="page2">
+        <div data-role="header">
+            <h1>美食X檔案</h1>
+        </div>
+        <div data-role="content" data-iscroll>
+            <ul data-role="listview" data-inset="true" id="restaurantTypeList">
+                <li><a href="#" data-rel="popup" data-position-to="window" id="chinese food near me">中式美食</a></li>
+                <li><a href="#" data-rel="popup" data-position-to="window" id="korean food">韓國美食</a></li>
+                <li><a href="#" data-rel="popup" data-position-to="window" id="american food">美式料理</a></li>
+                <li><a href="#" data-rel="popup" data-position-to="window" id="japanese food">日本美食</a></li>
+                <li><a href="#" data-rel="popup" data-position-to="window" id="thai food">泰國美食</a></li>
+                <li><a href="#" data-rel="popup" data-position-to="window" id="healthy food">健康飲食</a></li>
+            </ul>
+
+            <!-- 半径选择对话框 -->
+            <div data-role="popup" id="radiusPopup" data-dismissible="false" data-overlay-theme="a">
+                <div data-role="header" data-theme="a">
+                    <h1>選擇搜索半徑距離</h1>
+                </div>
+                <div data-role="content">
+                    <form id="radiusForm">
+                        <label for="radiusSelect">選擇半徑：</label>
+                        <select name="radiusSelect" id="radiusSelect">
+                            <option value="1000">1公里</option>
+                            <option value="2000">2公里</option>
+                            <option value="3000">3公里</option>
+                        </select>
+                        <a href="#" data-role="button" data-inline="true" data-rel="back" data-theme="c">取消</a>
+                        <a href="#" data-role="button" id="searchButton" data-inline="true" data-transition="flow" data-theme="b">搜索</a>
+                    </form>
+                </div>
+            </div>
+
+            <div class="search-bar">
+                <form id="searchForm">
+                    <label for="userInput">輸入您想吃的美食類型：</label>
+                    <input type="text" id="userInput" name="userInput" placeholder="例如：中式美食">
+                    <label for="radius">選擇搜索半徑距離：</label>
+                    <select id="radius">
+                        <option value="1000">1公里</option>
+                        <option value="2000">2公里</option>
+                        <option value="3000">3公里</option>
+                    </select>
+                    <button type="button" class="ui-btn ui-btn-b ui-corner-all" onclick="searchWithUserInput()">搜索</button>
+                </form>
+            </div>
+        </div>
+        <div data-role="footer" data-position="fixed">
+            <div data-role="navbar">
+                <ul>
+                    <li><a href="#page3" data-icon="home">小組成員</a></li>
+                    <li><a href="#" data-icon="check">會員專區</a></li>
+                    <li><a href="#page1" data-icon="forward">返回</a></li>
+                </ul>
+            </div>
+            <h4>&copy;版權所有:所有小組成員</h4>
+        </div>
+    </div>
+
+    <div data-role="page" id="page3">
+        <div data-role="header">
+            <h1>小組名單</h1>
+        </div>
+        <div data-role="content">
+            <div style="text-align: center;">
+                <h2>小組成員</h2>
+                <p>成員 1: 資管四乙 蔡成寅 4A990123</p>
+                <p>成員 2: 資管四甲 曾詩涵 4A990055</p>
+                <p>成員 3: 資管四乙 張任熙 4A990033</p>
+                <p>成員 4: 資管四甲 黃品婕 4A990071</p>
+            </div>
+        </div>
+        <div data-role="footer" data-position="fixed">
+            <div data-role="navbar">
+                <ul>
+                    <li><a href="#page3" data-icon="home">小組成員</a></li>
+                    <li><a href="#" data-icon="check">會員專區</a></li>
+                    <li><a href="#page1" data-icon="forward">返回</a></li>
+                </ul>
+            </div>
+            <h4>&copy;版權所有:所有小組成員</h4>
+        </div>
+    </div>
+</body>
+</html>
